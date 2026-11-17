@@ -45,7 +45,22 @@ jobs:
       run: flutter test --coverage
 
     - name: Build community APK
-      run: flutter build apk --release --split-per-abi --flavor community --target=lib/main_community.dart
+      run: |
+        keytool -genkeypair -v \
+          -keystore "$RELEASE_KEYSTORE_PATH" \
+          -storepass "$RELEASE_KEYSTORE_PASSWORD" \
+          -alias "$RELEASE_KEY_ALIAS" \
+          -keypass "$RELEASE_KEY_PASSWORD" \
+          -dname "CN=StoryPad CI" \
+          -keyalg RSA \
+          -keysize 2048 \
+          -validity 10000
+        flutter build apk --release --split-per-abi --flavor community --target=lib/main_community.dart
+      env:
+        RELEASE_KEYSTORE_PATH: ${{ runner.temp }}/community-release.jks
+        RELEASE_KEYSTORE_PASSWORD: android
+        RELEASE_KEY_ALIAS: community-ci
+        RELEASE_KEY_PASSWORD: android
 
     - name: Upload community APK
       uses: actions/upload-artifact@v4
