@@ -25,13 +25,19 @@ import 'package:storypad/widgets/bottom_sheets/sp_android_redemption_sheet.dart'
 // service account ID is used as a RevenueCat identity alias, enabling cross-platform
 // purchase sharing. Legacy email-hash users are migrated on initialization.
 class InAppPurchaseProvider extends ChangeNotifier with DisposeAwareMixin {
+  // Local personal forks should behave as fully unlocked even when billing is
+  // off or unavailable. Keep the database/schema and RevenueCat code intact, but
+  // bypass the purchase gate for app-local testing and validation.
+  static const bool _forceLocalUnlock = true;
+
   bool isActive(String productIdentifier) =>
-      !kIAPEnabled ? false : _customerInfo?.entitlements.all[productIdentifier]?.isActive == true;
+      _forceLocalUnlock || (!kIAPEnabled ? false : _customerInfo?.entitlements.all[productIdentifier]?.isActive == true);
 
-  bool get hasAnyLegacyPurchases => AppLegacyProduct.values.any((product) => isActive(product.productIdentifier));
-  bool get periodCalendar => isActive(AppLegacyProduct.period_calendar.productIdentifier);
+  bool get hasAnyLegacyPurchases =>
+      _forceLocalUnlock || AppLegacyProduct.values.any((product) => isActive(product.productIdentifier));
+  bool get periodCalendar => _forceLocalUnlock || isActive(AppLegacyProduct.period_calendar.productIdentifier);
 
-  bool get isProUser => isActive(AppProduct.storypad_pro_lifetime.productIdentifier) || hasAnyLegacyPurchases;
+  bool get isProUser => _forceLocalUnlock || isActive(AppProduct.storypad_pro_lifetime.productIdentifier) || hasAnyLegacyPurchases;
 
   CustomerInfo? _customerInfo;
   List<StoreProduct>? storeProducts;

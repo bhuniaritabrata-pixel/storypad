@@ -13,10 +13,12 @@ class _AddOnsContent extends StatelessWidget {
         title: Text(tr("page.add_ons.title")),
       ),
       body: ListView.separated(
-        itemCount: AddOnType.values.length,
+        itemCount: AddOnType.values.where((addOn) => addOn != AddOnType.period_calendar).length,
         separatorBuilder: (context, index) => const Divider(height: 1),
         itemBuilder: (context, index) {
-          final addOn = AddOnType.values[index];
+          final addOn = AddOnType.values
+              .where((candidate) => candidate != AddOnType.period_calendar)
+              .toList()[index];
           return _AddOnTile(addOn: addOn);
         },
       ),
@@ -36,7 +38,7 @@ class _AddOnTile extends StatelessWidget {
       case .relax_sounds:
         return SpDemoImagesSheet.relaxSoundDemoImages;
       case .period_calendar:
-        return SpDemoImagesSheet.periodCalendarDemoImages;
+        return const [];
     }
   }
 
@@ -47,9 +49,7 @@ class _AddOnTile extends StatelessWidget {
     // DevicePreferencesProvider directly — see _RemindersContent for the same pattern.
     final provider = context.read<DevicePreferencesProvider>();
 
-    bool enabled =
-        (provider.enableRelaxSounds && addOn == AddOnType.relax_sounds) ||
-        (provider.enablePeriodCalendar(context) && addOn == AddOnType.period_calendar);
+    bool enabled = provider.enableRelaxSounds && addOn == AddOnType.relax_sounds;
 
     // The switch reflects the true enabled state but doesn't toggle directly —
     // tapping it (like tapping the tile) opens the sheet, where the real
@@ -97,9 +97,7 @@ class _AddOnSwitchTileState extends State<_AddOnSwitchTile> {
   void initState() {
     super.initState();
     final provider = context.read<DevicePreferencesProvider>();
-    _enabled =
-        (provider.enableRelaxSounds && widget.addOn == AddOnType.relax_sounds) ||
-        (provider.enablePeriodCalendar(context) && widget.addOn == AddOnType.period_calendar);
+    _enabled = provider.enableRelaxSounds && widget.addOn == AddOnType.relax_sounds;
   }
 
   void _setEnabled(bool value) {

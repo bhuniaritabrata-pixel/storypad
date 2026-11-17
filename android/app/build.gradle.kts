@@ -62,7 +62,7 @@ android {
         versionName = flutter.versionName
 
         // --dart-define-from-file=configs/example.json
-        resValue("string", "app_name", dartDefines["APP_NAME"] ?: "StoryPad C.")
+        resValue("string", "app_name", dartDefines["APP_NAME"] ?: "My Diary")
         resValue("string", "google_map_api_key", dartDefines["GOOGLE_MAPS_ANDROID_API_KEY"] ?: "")
     }
 

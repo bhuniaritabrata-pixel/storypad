@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:storypad/core/mixins/dispose_aware_mixin.dart';
 import 'package:storypad/core/objects/calendar_segment_id.dart';
-import 'package:storypad/providers/device_preferences_provider.dart';
 import 'calendar_view.dart';
 
 class CalendarViewModel extends ChangeNotifier with DisposeAwareMixin {
@@ -32,12 +30,7 @@ class CalendarViewModel extends ChangeNotifier with DisposeAwareMixin {
   List<CalendarSegmentId> get segments => _segments;
 
   void _setSegments() {
-    _segments = [
-      CalendarSegmentId.mood,
-
-      // Use read (no need to listen) as this view is opened as sheet, so the enabled status is ready before this page is being built.
-      if (viewContext.read<DevicePreferencesProvider>().enablePeriodCalendar(viewContext)) CalendarSegmentId.period,
-    ];
+    _segments = [CalendarSegmentId.mood];
   }
 
   @override

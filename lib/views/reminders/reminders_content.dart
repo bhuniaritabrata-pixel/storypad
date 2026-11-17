@@ -12,7 +12,6 @@ class _RemindersContent extends StatelessWidget {
     // DevicePreferencesProvider directly — that provider is shared across the
     // whole app and would cause far more rebuilds than needed here.
     final provider = context.read<DevicePreferencesProvider>();
-    final periodEnabled = provider.enablePeriodCalendar(context);
 
     return Scaffold(
       appBar: AppBar(title: Text(tr('page.reminders.title'))),
@@ -21,7 +20,6 @@ class _RemindersContent extends StatelessWidget {
           const SizedBox(height: 8),
           _buildBuiltinTile(context, provider, ReminderType.daily, SpIcons.newStory),
           _buildBuiltinTile(context, provider, ReminderType.onThisDay, SpIcons.history),
-          if (periodEnabled) _buildBuiltinTile(context, provider, ReminderType.period, SpIcons.calendar),
           const SizedBox(height: 8.0),
           const Divider(height: 1),
           const SizedBox(height: 4.0),
