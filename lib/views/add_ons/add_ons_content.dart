@@ -8,17 +8,12 @@ class _AddOnsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: ColorScheme.of(context).readOnly.surface1,
-        title: Text(tr("page.add_ons.title")),
-      ),
+      appBar: AppBar(backgroundColor: ColorScheme.of(context).readOnly.surface1, title: Text(tr("page.add_ons.title"))),
       body: ListView.separated(
         itemCount: AddOnType.values.where((addOn) => addOn != AddOnType.period_calendar).length,
         separatorBuilder: (context, index) => const Divider(height: 1),
         itemBuilder: (context, index) {
-          final addOn = AddOnType.values
-              .where((candidate) => candidate != AddOnType.period_calendar)
-              .toList()[index];
+          final addOn = AddOnType.values.where((candidate) => candidate != AddOnType.period_calendar).toList()[index];
           return _AddOnTile(addOn: addOn);
         },
       ),
@@ -27,9 +22,7 @@ class _AddOnsContent extends StatelessWidget {
 }
 
 class _AddOnTile extends StatelessWidget {
-  const _AddOnTile({
-    required this.addOn,
-  });
+  const _AddOnTile({required this.addOn});
 
   final AddOnType addOn;
 
@@ -64,10 +57,7 @@ class _AddOnTile extends StatelessWidget {
     return ListTile(
       onTap: openSheet,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      leading: SpSettingIconBadge(
-        weekday: addOn.weekdayColor,
-        icon: addOn.icon,
-      ),
+      leading: SpSettingIconBadge(weekday: addOn.weekdayColor, icon: addOn.icon),
       title: _AddOnTitle(addOn: addOn),
       subtitle: Text(addOn.description),
       trailing: Switch.adaptive(value: enabled, onChanged: (_) => openSheet()),
@@ -131,10 +121,7 @@ class _AddOnTitle extends StatelessWidget {
         style: Theme.of(context).textTheme.bodyLarge,
         children: [
           if (addOn.designForFemale)
-            const WidgetSpan(
-              child: Icon(Icons.female_outlined, size: 22.0),
-              alignment: PlaceholderAlignment.middle,
-            ),
+            const WidgetSpan(child: Icon(Icons.female_outlined, size: 22.0), alignment: PlaceholderAlignment.middle),
         ],
       ),
     );

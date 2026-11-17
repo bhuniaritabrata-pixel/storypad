@@ -44,6 +44,16 @@ jobs:
     - name: Run tests
       run: flutter test --coverage
 
+    - name: Build community APK
+      run: flutter build apk --release --split-per-abi --flavor community --target=lib/main_community.dart
+
+    - name: Upload community APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-community-arm64-v8a-release
+        path: build/app/outputs/flutter-apk/app-community-arm64-v8a-release.apk
+        if-no-files-found: error
+
     - name: Upload coverage reports to Codecov
       if: success()
       uses: codecov/codecov-action@v4

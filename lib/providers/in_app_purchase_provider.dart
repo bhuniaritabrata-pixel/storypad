@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -31,13 +32,15 @@ class InAppPurchaseProvider extends ChangeNotifier with DisposeAwareMixin {
   static const bool _forceLocalUnlock = true;
 
   bool isActive(String productIdentifier) =>
-      _forceLocalUnlock || (!kIAPEnabled ? false : _customerInfo?.entitlements.all[productIdentifier]?.isActive == true);
+      _forceLocalUnlock ||
+      (!kIAPEnabled ? false : _customerInfo?.entitlements.all[productIdentifier]?.isActive == true);
 
   bool get hasAnyLegacyPurchases =>
       _forceLocalUnlock || AppLegacyProduct.values.any((product) => isActive(product.productIdentifier));
   bool get periodCalendar => _forceLocalUnlock || isActive(AppLegacyProduct.period_calendar.productIdentifier);
 
-  bool get isProUser => _forceLocalUnlock || isActive(AppProduct.storypad_pro_lifetime.productIdentifier) || hasAnyLegacyPurchases;
+  bool get isProUser =>
+      _forceLocalUnlock || isActive(AppProduct.storypad_pro_lifetime.productIdentifier) || hasAnyLegacyPurchases;
 
   CustomerInfo? _customerInfo;
   List<StoreProduct>? storeProducts;
@@ -139,9 +142,7 @@ class InAppPurchaseProvider extends ChangeNotifier with DisposeAwareMixin {
     }
   }
 
-  Future<void> _syncCloudUserLogins({
-    UserChangeType? changeType,
-  }) async {
+  Future<void> _syncCloudUserLogins({UserChangeType? changeType}) async {
     final services = BackupProvider.repoInstance.services;
     // Must actually have a usable global ID right now, not just be signed in
     // to a service *type* that's capable of one — a signed-out service
@@ -192,9 +193,7 @@ class InAppPurchaseProvider extends ChangeNotifier with DisposeAwareMixin {
           final result = await Purchases.logIn(appUserId);
           _customerInfo = result.customerInfo;
 
-          AppLogger.d(
-            '$runtimeType#_syncCloudUserLogins logged in as "$appUserId" (new RC user: ${result.created})',
-          );
+          AppLogger.d('$runtimeType#_syncCloudUserLogins logged in as "$appUserId" (new RC user: ${result.created})');
         } catch (e, s) {
           AppLogger.error('$runtimeType#_syncCloudUserLogins logIn("$appUserId") error: $e', stackTrace: s);
         }
@@ -268,9 +267,7 @@ class InAppPurchaseProvider extends ChangeNotifier with DisposeAwareMixin {
     );
   }
 
-  Future<List<StoreProduct>?> fetchAndCacheProducts({
-    required String debugSource,
-  }) async {
+  Future<List<StoreProduct>?> fetchAndCacheProducts({required String debugSource}) async {
     if (!kIAPEnabled) return null;
 
     try {
@@ -311,10 +308,9 @@ class InAppPurchaseProvider extends ChangeNotifier with DisposeAwareMixin {
           // Use cached product if available, otherwise fetch.
           StoreProduct? storeProduct = getProduct(productToPurchase);
 
-          storeProduct ??= await Purchases.getProducts(
-            [productToPurchase],
-            productCategory: ProductCategory.nonSubscription,
-          ).then((e) => e.firstOrNull);
+          storeProduct ??= await Purchases.getProducts([
+            productToPurchase,
+          ], productCategory: ProductCategory.nonSubscription).then((e) => e.firstOrNull);
 
           if (storeProduct == null) return;
 
