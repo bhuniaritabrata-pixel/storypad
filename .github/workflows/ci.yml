@@ -51,7 +51,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: app-community-arm64-v8a-release
-        path: build/app/outputs/flutter-apk/app-community-arm64-v8a-release.apk
+        path: build/app/outputs/flutter-apk/*.apk
         if-no-files-found: error
 
     - name: Upload coverage reports to Codecov
