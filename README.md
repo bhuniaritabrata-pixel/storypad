@@ -40,7 +40,7 @@ Before getting started, ensure you have the following tools:
 
 - Java: 21 [(LTS)](https://www.oracle.com/java/technologies/java-se-support-roadmap.html) (for Android)
 - Ruby: 3.3.5 (for IOS)
-- Flutter: 3.29.0
+- Flutter: 3.47.4 (see [.tool-versions](.tool-versions))
 
 For easy setup and running, the GoogleService-Info.plist and google-services.json are provided directly in this repo, and `bin/dev` generates an empty Dart-defines fallback automatically (RevenueCat, Maps, Google Sign-In, etc. just no-op). Simply run the project with any of the following commands:
 
@@ -54,6 +54,16 @@ bin/dev --community-ios
 # For macos
 bin/dev --community-macos
 ```
+
+To build a community Android debug APK directly from the terminal:
+
+```sh
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs
+flutter build apk --flavor community --target=lib/main_community.dart
+```
+
+The APK is written to `build/app/outputs/flutter-apk/app-community-debug.apk`.
 
 ## 🛠 <StoryPad> Project Overview
 
